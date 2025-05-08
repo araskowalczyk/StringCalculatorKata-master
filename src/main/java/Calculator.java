@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Calculator {
     public int add(String input) {
@@ -7,16 +9,37 @@ public class Calculator {
             return 0;
         }
      
-        String[] numbers = input.split(",|\n");
+    String delimiter = ",|\n";
+    String numbersPart = input;
+
+if (input.startsWith("//")) {
+    int index = input.indexOf("\n");
+    String delimiterPart = input.substring(2, index);
+    numbersPart = input.substring(index + 1);
+
+    List<String> delimiters = new ArrayList<>();
+    Matcher matcher = Pattern.compile("\\[(.*?)]").matcher(delimiterPart);
+    while (matcher.find()) {
+        delimiters.add(Pattern.quote(matcher.group(1)));
+    }
+    if (delimiters.isEmpty()) {
+        delimiters.add(Pattern.quote(delimiterPart));
+    }
+    delimiter = String.join("|", delimiters);
+}
+
+    String[] numbers = numbersPart.split(delimiter);
+
 
         int result = 0;
         List<String> negatives = new ArrayList<>();
-        for (String number:numbers) {
-        if (Integer.parseInt(number) < 0) {
-            negatives.add(number);
+        for (String number : numbers) {
+            int n = Integer.parseInt(number);
+            if (n < 0) {
+                negatives.add(number);
+            } else if (n <= 1000) {
+                result += n;
             }
-       
-            result += Integer.parseInt(number);
         }
         if (negatives.isEmpty()) {
         return result;
@@ -29,6 +52,3 @@ public class Calculator {
 }
 
 
-
-
-// zakonczono na 39:00 filmiku https://www.youtube.com/watch?v=CODh4Q-xcv4

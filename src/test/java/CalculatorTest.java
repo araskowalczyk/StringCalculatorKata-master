@@ -55,6 +55,37 @@ public class CalculatorTest {
         assertThat(exception.getMessage()).isEqualTo("Negatives: -1 -2");
     }
 
+    @Test
+void shouldAllowCustomDelimiter() {
+    int result = calculator.add("//;\n1;2");
+    assertThat(result).isEqualTo(3);
+}
+
+@Test
+void shouldIgnoreNumbersGreaterThan1000() {
+    int result = calculator.add("2,1001");
+    assertThat(result).isEqualTo(2);
+}
+
+@Test
+void shouldAllowLongCustomDelimiter() {
+    int result = calculator.add("//[***]\n1***2***3");
+    assertThat(result).isEqualTo(6);
+}
+
+@Test
+void shouldAllowMultipleCustomDelimiters() {
+    int result = calculator.add("//[*][%]\n1*2%3");
+    assertThat(result).isEqualTo(6);
+}
+
+@Test
+void shouldAllowMultipleLongCustomDelimiters() {
+    int result = calculator.add("//[***][%%%]\n1***2%%%3");
+    assertThat(result).isEqualTo(6);
+}
+
+
     
         
 }
